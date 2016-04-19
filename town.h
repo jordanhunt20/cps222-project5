@@ -44,5 +44,6 @@ class Town
 
   private:
 
+    std::string _name;
     std::vector<Road> roads;
 };
