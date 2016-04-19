@@ -62,13 +62,13 @@ int main(int argc, char *argv[])
             std::cin >> destinationTown;
             std::cin >> type;
             std::cin >> length;
-            theProvince.addRoad(originTown, destinationTown, type, length);
+            theProvince->addRoad(originTown, destinationTown, type, length);
         }
         numProvinces++;
     }
 
     // for each province, print out information about cities and roads
     for (int i = 0; i < numProvinces; i++) {
-        provinces[i].printAll();
+        provinces[i]->printAll();
     }
 }
