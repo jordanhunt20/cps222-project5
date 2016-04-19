@@ -6,5 +6,5 @@
 
 #include "road.h"
 
-Road::Road(char type, int length) : _type(type), _length(length)
+Road::Road(char type, double length) : _type(type), _length(length)
 { }

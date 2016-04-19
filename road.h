@@ -15,7 +15,7 @@ class Road
      * @param type Type of road, either bridge "B" or none "N"
      * @param length Length of the road in miles
      */
-    Road(char type, int length);
+    Road(char type, double length);
 
     /**
      * Destructor
@@ -25,5 +25,5 @@ class Road
   private:
 
     char _type;
-    int _length;
+    double _length;
 };
