@@ -23,8 +23,14 @@ Province::Province(int numTowns, int numRoads)
  * @param town A town
  * @param isCapital Whether or not town is the capital of the province
  */
-void Province::addTown(Town town, bool isCapital)
+void Province::addTown(std::string townName, bool isCapital)
 {
+    Town theTown(townName);
+    if (isCapital) {
+        _capital = theTown;
+    } else {
+        _towns.push_back(theTown);
+    }
 }
 
 /*
@@ -34,6 +40,17 @@ void Province::addTown(Town town, bool isCapital)
  * @param type Type of road, either "B" for bridge or "N" for none
  * @param length Length of road in miles
  */
-void addRoad(std::string originTown, std::string destinationTown,
+void Province::addRoad(std::string originTown, std::string destinationTown,
                  char type, int length)
-{ }
+{
+    Road theRoad(originTown, destinationTown, type, length);
+    _roads.push_back(theRoad);
+}
+
+/*
+ * Print all relevant information for towns and roads in this province
+ */
+void Province::printAll()
+{
+
+}

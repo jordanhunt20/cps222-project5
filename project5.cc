@@ -33,7 +33,7 @@ int main(int argc, char *argv[])
 
     // Repeatedly read input from standard input
     while (!eof()) {
-	int numTowns, numRoads;
+		int numTowns, numRoads;
         std::string townName, originTown, destinationTown;
         char type;
         double length;
@@ -45,7 +45,7 @@ int main(int argc, char *argv[])
 
         // add the province to the vector of provinces
         provinces.push_back(theProvince);
-        
+
         // only the first town is the capital
         bool isCapital = true;
 

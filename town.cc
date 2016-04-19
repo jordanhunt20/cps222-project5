@@ -11,3 +11,6 @@
 Town::Town(std::string name)
 : _name(name)
 { }
+
+Town::~Town()
+{ }

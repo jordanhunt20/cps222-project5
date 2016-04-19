@@ -15,7 +15,8 @@ class Road
      * @param type Type of road, either bridge "B" or none "N"
      * @param length Length of the road in miles
      */
-    Road(char type, double length);
+    Road(std::string originTown, std::string destinationTown,
+                     char type, int length);
 
     /**
      * Destructor
@@ -23,7 +24,8 @@ class Road
     ~Road();
 
   private:
-
+    std::string _originTown;
+    std::string _destinationTown;
     char _type;
     double _length;
 };

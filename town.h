@@ -6,8 +6,8 @@
 
 #include <string>
 #include <vector>
-
 #include "road.h"
+
 
 class Town
 {
@@ -43,7 +43,5 @@ class Town
     ~Town();
 
   private:
-
     std::string _name;
-    std::vector<Road> roads;
 };

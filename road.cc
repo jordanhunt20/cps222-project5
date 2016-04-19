@@ -6,5 +6,11 @@
 
 #include "road.h"
 
-Road::Road(char type, double length) : _type(type), _length(length)
+Road::Road(std::string originTown, std::string destinationTown,
+                 char type, int length)
+                 : _originTown(originTown), _destinationTown(destinationTown),
+                 _type(type), _length(length)
+{ }
+
+Road::~Road()
 { }
