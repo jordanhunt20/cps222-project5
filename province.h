@@ -2,7 +2,7 @@
  * province.h - declarations for the class Province.	CPS222 project 5
  *
  * Copyright Jordan Hunt and Adam Vigneaux
- */
+*/
 
 class Province
 {
@@ -11,17 +11,18 @@ class Province
     // Constructor
     //
     // Parameter: name of province
-    Province(string name);
+    Province(int numTowns, int numRoads);
 
     // Insert a road
     //
     // Parameters: road to add
-    bool addTown(Town town)
+    void addTown(Town town);
+
+    ~Province();
 
   private:
 
     int _numTowns;
-	Towns [] towns;
-
-
+    int _numRoads;
+    Town towns[];
 };

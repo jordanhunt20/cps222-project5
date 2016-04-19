@@ -5,12 +5,11 @@
  */
 
 #include <iostream>
-using std::cout;
 
 #include "Town.h"
 #include "Road.h"
 
-Town::Town(string name)
+Town::Town(std::string name)
 : _name(name)
 { }
 
@@ -21,7 +20,7 @@ Town::Town(string name)
  * @param2 BTreeBlock number of root to start serach from
  * @return true if found, false if not
 */
-bool BTree::find(string key, BTreeFile::BlockNumber & numCurr, std::stack<BTreeFile::BlockNumber> & path) const
+bool BTree::find(std::string key, BTreeFile::BlockNumber & numCurr, std::stack<BTreeFile::BlockNumber> & path) const
 {
 }
 

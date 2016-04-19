@@ -5,14 +5,13 @@
  */
 
 #include <iostream>
-using std::cout;
 
 #include "province.h"
 #include "town.h"
 #include "road.h"
 
-Province::Province(string name)
-: _name(name)
+Province::Province(int numTowns, int numRoads)
+    : _numTowns(numTowns), _numRoads(numRoads)
 { }
 
 
@@ -22,10 +21,6 @@ Province::Province(string name)
  * @param2 BTreeBlock number of root to start serach from
  * @return true if found, false if not
 */
-bool Province::addTown(Town town)
-{
-}
-
-void Province::print() const
+void Province::addTown(Town town)
 {
 }

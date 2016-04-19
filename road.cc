@@ -10,26 +10,13 @@ using std::cout;
 #include "Road.h"
 
 
-Road::Road(string name)
-: _file(* new RoadFile(name))
+Road::Road(std::string name)
+: _file(* new Road(name))
 { }
 
 
 /*
 */
-bool Road::find(string key, RoadFile::BlockNumber & numCurr, std::stack<RoadFile::BlockNumber> & path) const
+bool Road::find(std::string key, Road::BlockNumber & numCurr, std::stack<Road::BlockNumber> & path) const
 {
-}
-
-void Road::print() const
-{
-    cout << "Road in file ";
-    _file.printHeaderInfo();
-    cout << endl;
-
-    RoadFile::BlockNumber root = _file.getRoot();
-    if (root == 0)
-        cout << "Empty tree" << endl;
-    else
-        _file.printBlock(root, true, 1);
 }

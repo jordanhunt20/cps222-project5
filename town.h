@@ -14,21 +14,21 @@ class Town
     // path).  If a file of this name exists, it is opened and the
     // tree stored in it is accessed; else a new file containing an
     // empty tree is created
-    Town(string name);
+    Town(std::string name);
 
     // Insert a road
     //
     // Parameters: key and associated value.  The key may not contain any
     // embedded spaces or control characters.
-    void insert(string key, string value);
+    void insert(std::string key, std::string value);
 
     // Lookup a key.  If found, set value to associated value and
     // return true, else leave value unchanged and return false
-    bool lookup(string key, string & value) const;
+    bool lookup(std::string key, std::string & value) const;
 
     // Remove a key and its associated value.  Return true if
     // found and removed, false if not.
-    bool remove(string key);
+    bool remove(std::string key);
 
     // Print the contents of the entire tree to cout for testing/debugging
     // purposes.
@@ -39,10 +39,5 @@ class Town
 
   private:
 
-    int _numTowns;
-	int _numRoads;
-	Town [] Towns;
-	string [] roads
-
-
+    std::string roads[];
 };
