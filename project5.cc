@@ -36,7 +36,7 @@ int main(int argc, char *argv[])
 	int numTowns, numRoads;
         std::string townName, originTown, destinationTown;
         char type;
-        double distance;
+        double length;
 
         // first two std::cin calls get the number of towns and the number of roads
         std::cin >> numTowns;
@@ -61,8 +61,8 @@ int main(int argc, char *argv[])
             std::cin >> originTown;
             std::cin >> destinationTown;
             std::cin >> type;
-            std::cin >> distance;
-            theProvince.addRoad(originTown, destinationTown, type, distance);
+            std::cin >> length;
+            theProvince.addRoad(originTown, destinationTown, type, length);
         }
         numProvinces++;
     }
