@@ -4,19 +4,7 @@
  * Copyright Jordan Hunt and Adam Vigneaux
  */
 
-#include <iostream>
-using std::cout;
+#include "road.h"
 
-#include "Road.h"
-
-
-Road::Road(std::string name)
-: _file(* new Road(name))
+Road::Road(char type, int length) : _type(type), _length(length)
 { }
-
-
-/*
-*/
-bool Road::find(std::string key, Road::BlockNumber & numCurr, std::stack<Road::BlockNumber> & path) const
-{
-}
