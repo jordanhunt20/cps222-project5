@@ -12,16 +12,34 @@ class Province
 {
   public:
 
-    // Constructor
-    //
-    // Parameter: name of province
+    /**
+     * Constructor
+     * @param numTowns number of towns in province
+     * @param numRoads number of roads in province
+     */
     Province(int numTowns, int numRoads);
 
-    // Insert a road
-    //
-    // Parameters: road to add
-    void addTown(Town town);
+    /*
+     * Add a town to the province
+     * @param town A town
+     * @param isCapital Whether or not town is the capital of the province
+     */
+    void addTown(Town town, bool isCapital);
 
+
+    /*
+     * Add a road to the province
+     * @param originTown Town that road starts in
+     * @param destinationTown Town that road ends in
+     * @param type Type of road, either "B" for bridge or "N" for none
+     * @param length Length of road in miles
+     */
+    void addRoad(std::string originTown, std::string destinationTown,
+                 char type, int length);
+
+    /**
+     * Destructor
+     */
     ~Province();
 
   private:

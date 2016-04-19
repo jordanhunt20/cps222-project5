@@ -8,17 +8,32 @@
 
 #include "province.h"
 
+/**
+ * Constructor
+ * @param numTowns number of towns in province
+ * @param numRoads number of roads in province
+ */
 Province::Province(int numTowns, int numRoads)
     : _numTowns(numTowns), _numRoads(numRoads)
 { }
 
 
 /*
- * Recursive auxiliary function for finding a block containing a key
- * @param1 string specifying key to be found
- * @param2 BTreeBlock number of root to start serach from
- * @return true if found, false if not
-*/
-void Province::addTown(Town town)
+ * Add a town to the province
+ * @param town A town
+ * @param isCapital Whether or not town is the capital of the province
+ */
+void Province::addTown(Town town, bool isCapital)
 {
 }
+
+/*
+ * Add a road to the province
+ * @param originTown Town that road starts in
+ * @param destinationTown Town that road ends in
+ * @param type Type of road, either "B" for bridge or "N" for none
+ * @param length Length of road in miles
+ */
+void addRoad(std::string originTown, std::string destinationTown,
+                 char type, int length)
+{ }
