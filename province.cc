@@ -7,8 +7,6 @@
 #include <iostream>
 
 #include "province.h"
-#include "town.h"
-#include "road.h"
 
 Province::Province(int numTowns, int numRoads)
     : _numTowns(numTowns), _numRoads(numRoads)

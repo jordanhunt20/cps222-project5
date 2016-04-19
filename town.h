@@ -4,6 +4,11 @@
  * Copyright Jordan Hunt and Adam Vigneaux
  */
 
+#include <string>
+#include <vector>
+
+#include "road.h"
+
 class Town
 {
   public:
@@ -39,5 +44,5 @@ class Town
 
   private:
 
-    std::string roads[];
+    std::vector<Road> roads;
 };

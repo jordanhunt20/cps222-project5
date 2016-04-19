@@ -4,6 +4,10 @@
  * Copyright Jordan Hunt and Adam Vigneaux
 */
 
+#include <vector>
+
+#include "town.h"
+
 class Province
 {
   public:
@@ -24,5 +28,5 @@ class Province
 
     int _numTowns;
     int _numRoads;
-    Town towns[];
+    std::vector<Town> towns;
 };

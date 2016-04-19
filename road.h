@@ -4,6 +4,8 @@
  * Copyright Jordan Hunt and Adam Vigneaux
  */
 
+#include <string>
+
 class Road
 {
   public:

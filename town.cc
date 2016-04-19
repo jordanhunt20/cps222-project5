@@ -6,8 +6,7 @@
 
 #include <iostream>
 
-#include "Town.h"
-#include "Road.h"
+#include "town.h"
 
 Town::Town(std::string name)
 : _name(name)
