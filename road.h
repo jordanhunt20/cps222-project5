@@ -40,7 +40,6 @@ class Road
     ~Road();
 
   private:
-
-    int _numRoads;
-    std::string roads[];
+    std::string destination;
+    char type;
 };
