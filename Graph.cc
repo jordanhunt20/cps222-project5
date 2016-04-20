@@ -1,5 +1,11 @@
 #include "Graph.h"
 
+/*
+* Implentation of Graph.h
+* Copyright Adam Vigneaux and Jordan Hunt
+* based on algorithms from Dr. Bjork
+*/
+
 /*******************************************************************************
 * Read a graph from a file into an adjacency list
 * File format: first line: number of vertices (N), number of edges (E)
@@ -10,12 +16,18 @@
 * digraph - see line marked with ** below. It can also be used for a network
 * if we add a weight to each edge line - see lines marked with **** below
 ******************************************************************************/
+/*
+ * Constructor
+ * @param1 source the data stram to read from
+*/
 Graph::Graph(std::istream & source)
 {
     // Read number of vertices and number of edges
 
-    int numberOfEdges;
+    // TODO: make this an instance variable like _numberOfVertices
+    int numberOfEdges; // number of edges in the graph
 
+    // read the number of vertices and number of edges in the graph
     source >> _numberOfVertices >> numberOfEdges;
 
     // Read in names of vertices. Add a Vertex object for each to the
@@ -25,6 +37,9 @@ Graph::Graph(std::istream & source)
     _vertex = new Vertex[_numberOfVertices];
     std::map < std::string, int > nameMap;
 
+    // for each vertex representing a town, read in the
+    // name of the town and create a vertex and add the name to the
+    // map of vertex names
     for (int i = 0; i < _numberOfVertices; i ++) {
         std::string name;
         source >> name;
@@ -35,23 +50,25 @@ Graph::Graph(std::istream & source)
     // Read in edges. Add an edge node for each to the adjacency
     // list for its vertices
 
+    // for each edge representing a road, read in the
+    // starting and ending towns, and add the road to the
+    // list of roads for both towns
     for (int i = 0; i < numberOfEdges; i ++) {
         std::string tail, head;
         source >> tail >> head;
-        int tailIndex = nameMap[tail];
-        int headIndex = nameMap[head];
+        int tailIndex = nameMap[tail]; // index of the first town
+        int headIndex = nameMap[head]; // index of the second town
 
+        // get the type of the road
         char type;
         source >> type;
 
-        // **** FOR A NETWORK, ADD THE FOLLOWING LINES, AND ADD weight AS A ****
-        // **** PARAMETER TO THE Edge CONSTRUCTOR IN THE SUBSEQUENT LINE(S) ****
+        // get the weight of the road
         double weight;
         source >> weight;
 
-
+        // add the roads to both towns
         _vertex [ tailIndex ]._edges.push_back(Edge(headIndex, type, weight));
-        // ** THE FOLLOWING LINE WOULD BE OMITTED FOR A DIGRAPH **
         _vertex [ headIndex ]._edges.push_back(Edge(tailIndex, type, weight));
     }
 }
@@ -61,6 +78,11 @@ Graph::Graph(std::istream & source)
 /*******************************************************************************
 * BFS on an adjacency list
 ******************************************************************************/
+/*
+ * writes information about towns and their roads in breadth first order
+ * @param1 start the index in the vertices list of the town to begin the bfs at
+ * @param2 output the output stream to write to
+ */
 void Graph::bfs(int start, std::ostream & output) const
 {
 
@@ -72,36 +94,44 @@ void Graph::bfs(int start, std::ostream & output) const
 
     output << std::endl << std::endl;
 
+    // keeps track of which vertices have been visited
     bool scheduled [ _numberOfVertices ];
     for (int i = 0; i < _numberOfVertices; i ++) {
-        scheduled[i] = false;
+        scheduled[i] = false; // default false value for each vertex
     }
 
+    // queue to keep track of which vertex to visit next
     std::queue < int > toVisit;
     toVisit.push(start);
     scheduled[start] = true;
     output << "The input data is:" << std::endl << std::endl;
+
+    // go through the loop until the queue is empty
     while (! toVisit.empty())
     {
         // Visit front vertex on the queue
-
         int current = toVisit.front(); toVisit.pop();
-        output << "      ";
+        output << "      "; // formatting
         output << _vertex [ current ]._name << std::endl;
 
         // Enqueue its unscheduled neighbors
-
         for (Vertex::EdgeList::iterator neighbor = _vertex[current]._edges.begin();
         neighbor != _vertex[current]._edges.end(); neighbor ++)
         {
             std::string neighborName = _vertex[neighbor -> _head]._name;
-            output << "            ";
+            output << "            "; // formatting
             output << neighborName << " " << neighbor -> _weight << " mi";
+
+            // if the type is bridge, then add to output
             if (neighbor -> _type == 'B') {
                 output << " via bridge";
             }
-            output << std::endl;
+            output << std::endl; // formatting
+
             int head = neighbor -> _head;
+
+            // if the neighbor has not yet been scheduled, add it to the
+            // toVisit queue
             if (! scheduled[head])
             {
                 toVisit.push(head);
@@ -113,7 +143,7 @@ void Graph::bfs(int start, std::ostream & output) const
     output << std::endl << std::endl;
 }
 
-
+/* TODO: comment out this function when we use it later */
 /*******************************************************************************
 * Topological sorting - using an adjacency list (two versions)
 ******************************************************************************/
