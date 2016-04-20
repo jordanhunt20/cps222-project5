@@ -41,14 +41,18 @@ Graph::Graph(std::istream & source)
         int tailIndex = nameMap[tail];
         int headIndex = nameMap[head];
 
+        char type;
+        source >> type;
+
         // **** FOR A NETWORK, ADD THE FOLLOWING LINES, AND ADD weight AS A ****
         // **** PARAMETER TO THE Edge CONSTRUCTOR IN THE SUBSEQUENT LINE(S) ****
         double weight;
         source >> weight;
 
-        _vertex [ tailIndex ]._edges.push_back(Edge(headIndex, weight));
+
+        _vertex [ tailIndex ]._edges.push_back(Edge(headIndex, type, weight));
         // ** THE FOLLOWING LINE WOULD BE OMITTED FOR A DIGRAPH **
-        _vertex [ headIndex ]._edges.push_back(Edge(tailIndex, weight));
+        _vertex [ headIndex ]._edges.push_back(Edge(tailIndex, type, weight));
     }
 }
 
@@ -59,8 +63,14 @@ Graph::Graph(std::istream & source)
 ******************************************************************************/
 void Graph::bfs(int start, std::ostream & output) const
 {
+
+    output << "------------------------------------------------" << std::endl;
+    output << "---------------- New DataSet: ------------------" << std::endl;
+    output << "------------------------------------------------" << std::endl;
     // Keep track of whether a vertex has been scheduled to be visited, lest
     // we get into a loop
+
+    output << std::endl << std::endl;
 
     bool scheduled [ _numberOfVertices ];
     for (int i = 0; i < _numberOfVertices; i ++) {
@@ -70,12 +80,13 @@ void Graph::bfs(int start, std::ostream & output) const
     std::queue < int > toVisit;
     toVisit.push(start);
     scheduled[start] = true;
-
+    output << "The input data is:" << std::endl << std::endl;
     while (! toVisit.empty())
     {
         // Visit front vertex on the queue
 
         int current = toVisit.front(); toVisit.pop();
+        output << "      ";
         output << _vertex [ current ]._name << std::endl;
 
         // Enqueue its unscheduled neighbors
@@ -83,6 +94,13 @@ void Graph::bfs(int start, std::ostream & output) const
         for (Vertex::EdgeList::iterator neighbor = _vertex[current]._edges.begin();
         neighbor != _vertex[current]._edges.end(); neighbor ++)
         {
+            std::string neighborName = _vertex[neighbor -> _head]._name;
+            output << "            ";
+            output << neighborName << " " << neighbor -> _weight << " mi";
+            if (neighbor -> _type == 'B') {
+                output << " via bridge";
+            }
+            output << std::endl;
             int head = neighbor -> _head;
             if (! scheduled[head])
             {
@@ -91,6 +109,8 @@ void Graph::bfs(int start, std::ostream & output) const
             }
         }
     }
+
+    output << std::endl << std::endl;
 }
 
 

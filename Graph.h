@@ -27,8 +27,8 @@ private:
     {
     public:
 
-        Edge(int head, double weight)
-        : _head(head), _weight(weight)
+        Edge(int head, char type, double weight)
+        : _head(head), _type(type), _weight(weight)
         { }
 
         int _head;
@@ -36,6 +36,7 @@ private:
         // **** FOLLOWING, USING SOME NUMERIC TYPE (E.G.double) ****
         // **** ALSO ADD A weight PARAMETER TO THE CONSTRUCTOR ****
         double _weight;
+        char _type;
     };
 
     /* This inner class represents one vertex of the graph */
