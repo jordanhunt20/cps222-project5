@@ -46,8 +46,8 @@ private:
         { }
 
         int _head; // the index in the vertex array of the originating town
-        double _weight; // the length of the road
         char _type; // the type of the road
+        double _weight; // the length of the road
     };
 
     /* This inner class represents one vertex (town) of the graph */
