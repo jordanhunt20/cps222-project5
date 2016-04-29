@@ -1,11 +1,10 @@
 # Makefile for CPS222 Project 5
 # Makes file project5
 
-project5:	Graph.o project5.o
+project5:	province.o project5.o
 	g++ -o $@ $^
 
-Graph.o:	Graph.h
-project4.o:	Graph.h
+province.o:	province.h
 
 %.o:	%.cc
 	g++ -c $<
