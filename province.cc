@@ -1,7 +1,7 @@
-#include "Graph.h"
+#include "province.h"
 
 /*
-* Implentation of Graph.h
+* Implentation of Province.h
 * Copyright Adam Vigneaux and Jordan Hunt
 * based on algorithms from Dr. Bjork
 */
@@ -20,7 +20,7 @@
  * Constructor
  * @param1 source the data stram to read from
 */
-Graph::Graph(std::istream & source)
+Province::Province(std::istream & source)
 {
     // Read number of vertices and number of edges
 
@@ -83,7 +83,7 @@ Graph::Graph(std::istream & source)
  * @param1 start the index in the vertices list of the town to begin the bfs at
  * @param2 output the output stream to write to
  */
-void Graph::bfs(int start, std::ostream & output) const
+void Province::bfs(int start, std::ostream & output) const
 {
 
     output << "------------------------------------------------" << std::endl;
@@ -147,7 +147,7 @@ void Graph::bfs(int start, std::ostream & output) const
 /*******************************************************************************
 * Topological sorting - using an adjacency list (two versions)
 ******************************************************************************/
-void Graph::topsort(std::ostream & output) const
+void Province::topsort(std::ostream & output) const
 {
     // Record two facts for every vertex: whether it has been visited, and
     // the count of predecessors that have not yet been visited. The
@@ -196,7 +196,7 @@ void Graph::topsort(std::ostream & output) const
         }
         else
         {
-            output << "Graph contains a cycle - topological sort impossible"
+            output << "Province contains a cycle - topological sort impossible"
             << std::endl;
             return;
         }
