@@ -62,14 +62,15 @@ Province::Province(std::istream & source)
         // get the type of the road
         char type;
         source >> type;
-
+        bool isBridge = (type == 'B');
+        
         // get the weight of the road
-        double weight;
-        source >> weight;
+        double length;
+        source >> length;
 
         // add the roads to both towns
-        _town[ tailIndex ]._roads.push_back(Road(headIndex, type, weight));
-        _town[ headIndex ]._roads.push_back(Road(tailIndex, type, weight));
+        _town[ tailIndex ]._roads.push_back(Road(headIndex, isBridge, length));
+        _town[ headIndex ]._roads.push_back(Road(tailIndex, isBridge, length));
     }
 }
 
@@ -120,10 +121,10 @@ void Province::bfs(int start, std::ostream & output) const
         {
             std::string neighborName = _town[neighbor -> _head]._name;
             output << "            "; // formatting
-            output << neighborName << " " << neighbor -> _weight << " mi";
+            output << neighborName << " " << neighbor -> _length << " mi";
 
             // if the type is bridge, then add to output
-            if (neighbor -> _type == 'B') {
+            if (neighbor->_isBridge) {
                 output << " via bridge";
             }
             output << std::endl; // formatting

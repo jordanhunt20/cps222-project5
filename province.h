@@ -38,18 +38,17 @@ private:
 
         /*
          * Constructor
-         * @param1 head the index in the vertex array of the originating town
-         * @param2 type the type of road (either bridge or none)
-         * @param3 weight the length of the road
-         * TODO: change char type to a boolean or enum
+         * @param head Index in vertex array of originating town
+         * @param isBridge Whether or not the road is a bridge
+         * @param length Length of the road in miles
          */
-        Road(int head, char type, double weight)
-        : _head(head), _type(type), _weight(weight)
-        { }
+        Road(int head, bool isBridge, double length)
+            : _head(head), _isBridge(isBridge), _length(length)
+        {}
 
         int _head; // the index in the vertex array of the originating town
-        char _type; // the type of the road
-        double _weight; // the length of the road
+        bool _isBridge;
+        double _length;
     };
 
     /* This inner class represents one vertex (town) of the graph */
