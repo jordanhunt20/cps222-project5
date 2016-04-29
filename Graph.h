@@ -29,8 +29,7 @@ public:
 
 private:
     /* This inner class represents one edge (road) of the graph */
-    // TODO: change Edge to Road
-    class Edge
+    class Road
     {
     public:
 
@@ -41,7 +40,7 @@ private:
          * @param3 weight the length of the road
          * TODO: change char type to a boolean or enum
          */
-        Edge(int head, char type, double weight)
+        Road(int head, char type, double weight)
         : _head(head), _type(type), _weight(weight)
         { }
 
@@ -56,7 +55,7 @@ private:
     {
     public:
         std::string _name; // the name of the town represented by the vertex
-        typedef std::list < Edge > EdgeList; // declares type EdgeList to be a list of edges
+        typedef std::list <Road> EdgeList; // declares type EdgeList to be a list of edges
         EdgeList _edges; // list of edges (roads)
     };
 

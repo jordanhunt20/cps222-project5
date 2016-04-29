@@ -68,8 +68,8 @@ Graph::Graph(std::istream & source)
         source >> weight;
 
         // add the roads to both towns
-        _vertex [ tailIndex ]._edges.push_back(Edge(headIndex, type, weight));
-        _vertex [ headIndex ]._edges.push_back(Edge(tailIndex, type, weight));
+        _vertex [ tailIndex ]._edges.push_back(Road(headIndex, type, weight));
+        _vertex [ headIndex ]._edges.push_back(Road(tailIndex, type, weight));
     }
 }
 
