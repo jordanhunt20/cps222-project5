@@ -13,19 +13,22 @@
 /*******************************************************************************
 * The following class represents a graph by using an adjacency list
 ******************************************************************************/
-class Graph
+class Province
 {
 public:
+
     // Constructor - construct a representation from a text file
-    Graph(std::istream & source);
+    Province(std::istream & source);
+
     // BFS traversal from a specified starting vertex
     // - write vertex names to a text file
     void bfs(int start, std::ostream & output) const;
+
     // Write out the vertices in topological order
     void topsort(std::ostream & output) const;
+
     // Destructor
-    ~Graph()
-    { delete [] _vertex; }
+    ~Province() { delete [] _town; }
 
 private:
     /* This inner class represents one edge (road) of the graph */
@@ -50,15 +53,14 @@ private:
     };
 
     /* This inner class represents one vertex (town) of the graph */
-    // TODO: change Vertex to Town
-    class Vertex
+    class Town
     {
     public:
-        std::string _name; // the name of the town represented by the vertex
-        typedef std::list <Road> EdgeList; // declares type EdgeList to be a list of edges
-        EdgeList _edges; // list of edges (roads)
+        std::string _name;
+        typedef std::list <Road> RoadList;
+        RoadList _roads;
     };
 
-    int _numberOfVertices; // number of vertices (towns)
-    Vertex * _vertex; // list of vertices (towns)
+    int _numberOfTowns;
+    Town *_town;
 };

@@ -10,7 +10,7 @@
 
 #include <iostream>
 #include <string>
-#include "Graph.h"
+#include "province.h"
 
 /*
  * check if we are at the end of the file
@@ -38,11 +38,11 @@ int main(int argc, char *argv[])
     while (!eof()) {
         // create a new graph for each loop, which will read all of the
         // corresponding data per graph
-        Graph theGraph(std::cin);
+        Province theProvince(std::cin);
 
         // call the breadth first search function on the new graph
         // to print out ('echo') all of the corresponding data
         // as specified in the project description
-        theGraph.bfs(0, std::cout);
+        theProvince.bfs(0, std::cout);
     }
 }

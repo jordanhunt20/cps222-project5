@@ -28,22 +28,22 @@ Graph::Graph(std::istream & source)
     int numberOfEdges; // number of edges in the graph
 
     // read the number of vertices and number of edges in the graph
-    source >> _numberOfVertices >> numberOfEdges;
+    source >> _numberOfTowns >> numberOfEdges;
 
     // Read in names of vertices. Add a Vertex object for each to the
     // _vertex array, and also temporarily store its name in a map to
     // facilitate reading in the edge descriptions by vertex name
 
-    _vertex = new Vertex[_numberOfVertices];
+    _town = new Town[_numberOfTowns];
     std::map < std::string, int > nameMap;
 
     // for each vertex representing a town, read in the
     // name of the town and create a vertex and add the name to the
     // map of vertex names
-    for (int i = 0; i < _numberOfVertices; i ++) {
+    for (int i = 0; i < _numberOfTowns; i ++) {
         std::string name;
         source >> name;
-        _vertex[i]._name = name;
+        _town[i]._name = name;
         nameMap[name] = i;
     }
 
@@ -68,8 +68,8 @@ Graph::Graph(std::istream & source)
         source >> weight;
 
         // add the roads to both towns
-        _vertex [ tailIndex ]._edges.push_back(Road(headIndex, type, weight));
-        _vertex [ headIndex ]._edges.push_back(Road(tailIndex, type, weight));
+        _town[ tailIndex ]._roads.push_back(Road(headIndex, type, weight));
+        _town[ headIndex ]._roads.push_back(Road(tailIndex, type, weight));
     }
 }
 
@@ -95,8 +95,8 @@ void Graph::bfs(int start, std::ostream & output) const
     output << std::endl << std::endl;
 
     // keeps track of which vertices have been visited
-    bool scheduled [ _numberOfVertices ];
-    for (int i = 0; i < _numberOfVertices; i ++) {
+    bool scheduled [ _numberOfTowns ];
+    for (int i = 0; i < _numberOfTowns; i ++) {
         scheduled[i] = false; // default false value for each vertex
     }
 
@@ -112,13 +112,13 @@ void Graph::bfs(int start, std::ostream & output) const
         // Visit front vertex on the queue
         int current = toVisit.front(); toVisit.pop();
         output << "      "; // formatting
-        output << _vertex [ current ]._name << std::endl;
+        output << _town [ current ]._name << std::endl;
 
         // Enqueue its unscheduled neighbors
-        for (Vertex::EdgeList::iterator neighbor = _vertex[current]._edges.begin();
-        neighbor != _vertex[current]._edges.end(); neighbor ++)
+        for (Town::RoadList::iterator neighbor = _town[current]._roads.begin();
+        neighbor != _town[current]._roads.end(); neighbor ++)
         {
-            std::string neighborName = _vertex[neighbor -> _head]._name;
+            std::string neighborName = _town[neighbor -> _head]._name;
             output << "            "; // formatting
             output << neighborName << " " << neighbor -> _weight << " mi";
 
@@ -154,17 +154,17 @@ void Graph::topsort(std::ostream & output) const
     // latter is initialized to zero, then 1 is added for the head of
     // every edge
 
-    bool visited [ _numberOfVertices ];
-    int unvisitedPredecessors [ _numberOfVertices ];
+    bool visited [ _numberOfTowns ];
+    int unvisitedPredecessors [ _numberOfTowns ];
 
-    for (int i = 0; i < _numberOfVertices; i ++) {
+    for (int i = 0; i < _numberOfTowns; i ++) {
         visited[i] = false;
         unvisitedPredecessors[i] = 0;
     }
 
-    for (int i = 0; i < _numberOfVertices; i ++) {
-        for (Vertex::EdgeList::iterator iter = _vertex[i]._edges.begin();
-        iter != _vertex[i]._edges.end();
+    for (int i = 0; i < _numberOfTowns; i ++) {
+        for (Town::RoadList::iterator iter = _town[i]._roads.begin();
+        iter != _town[i]._roads.end();
         iter ++)
         unvisitedPredecessors [ iter -> _head ] ++;
     }
@@ -173,7 +173,7 @@ void Graph::topsort(std::ostream & output) const
     // have not predecessors in the initial graph
 
     std::queue < int > visitable;
-    for (int i = 0; i < _numberOfVertices; i ++) {
+    for (int i = 0; i < _numberOfTowns; i ++) {
         if (unvisitedPredecessors[i] == 0) {
             visitable.push(i);
         }
@@ -183,7 +183,7 @@ void Graph::topsort(std::ostream & output) const
     // Output the vertices in topological order. The following loop must
     // be done n times if all vertices are visited
 
-    for (int i = 0; i < _numberOfVertices; i ++)
+    for (int i = 0; i < _numberOfTowns; i ++)
     {
         // Find an unvisited vertex with no unvisited predecessors. (If
         // none can be found, graph contains a cycle.)
@@ -203,14 +203,13 @@ void Graph::topsort(std::ostream & output) const
 
         // Visit the vertex
 
-        output << _vertex[current]._name << std::endl;
+        output << _town[current]._name << std::endl;
         visited[current] = true;
 
         // Reduce predecessor count for its successors. If any drops to
         // zero, add it to the visitable queue
-
-        for (Vertex::EdgeList::iterator iter = _vertex[current]._edges.begin();
-        iter != _vertex[current]._edges.end();
+        for (Town::RoadList::iterator iter = _town[current]._roads.begin();
+        iter != _town[current]._roads.end();
         iter ++)
         {
             unvisitedPredecessors[ iter -> _head ] --;
