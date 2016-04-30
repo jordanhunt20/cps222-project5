@@ -10,30 +10,50 @@
 #include <map>
 #include <queue>
 
-/*******************************************************************************
-* The following class represents a graph by using an adjacency list
-******************************************************************************/
+/**
+ * Province
+ * Contains towns connected by roads
+ */
 class Province
 {
 public:
 
-    // Constructor - construct a representation from a text file
+    /**
+     * Constructor
+     * @param source Input data for province
+     */
     Province(std::istream & source);
 
-    // BFS traversal from a specified starting vertex
-    // - write vertex names to a text file
+    /**
+     * Print towns and roads in province in breadth-first search order
+     * @param start Index to start traversal at
+     * @param output Stream to print data to
+     */
     void bfs(int start, std::ostream & output) const;
 
-    // Write out the vertices in topological order
+    /**
+     * Print towns and roads in province in topological sort order
+     * @param output Stream to print data to
+     */
     void topsort(std::ostream & output) const;
 
+    /**
+     * Find shortest path from one town to another
+     */
     void findShortestPath();
 
-    // Destructor
+    /**
+     * Destructor
+     */
     ~Province() { delete [] _town; }
 
 private:
-    /* This inner class represents one edge (road) of the graph */
+
+    /**
+     * Road
+     * Contains index of originating town, whether or not is bridge,
+     * and length
+     */
     class Road
     {
     public:
@@ -48,12 +68,15 @@ private:
             : _head(head), _isBridge(isBridge), _length(length)
         {}
 
-        int _head; // the index in the vertex array of the originating town
+        int _head; // Index of originating town in vertex array
         bool _isBridge;
         double _length;
     };
 
-    /* This inner class represents one vertex (town) of the graph */
+    /**
+     * Town
+     * Contains name and a list of roads that connect to it
+     */
     class Town
     {
     public:
