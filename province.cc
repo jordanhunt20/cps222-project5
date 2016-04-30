@@ -24,11 +24,8 @@ Province::Province(std::istream & source)
 {
     // Read number of vertices and number of edges
 
-    // TODO: make this an instance variable like _numberOfVertices
-    int numberOfEdges; // number of edges in the graph
-
     // read the number of vertices and number of edges in the graph
-    source >> _numberOfTowns >> numberOfEdges;
+    source >> _numberOfTowns >> _numberOfRoads;
 
     // Read in names of vertices. Add a Vertex object for each to the
     // _vertex array, and also temporarily store its name in a map to
@@ -53,7 +50,7 @@ Province::Province(std::istream & source)
     // for each edge representing a road, read in the
     // starting and ending towns, and add the road to the
     // list of roads for both towns
-    for (int i = 0; i < numberOfEdges; i ++) {
+    for (int i = 0; i < _numberOfRoads; i ++) {
         std::string tail, head;
         source >> tail >> head;
         int tailIndex = nameMap[tail]; // index of the first town

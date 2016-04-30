@@ -27,6 +27,8 @@ public:
     // Write out the vertices in topological order
     void topsort(std::ostream & output) const;
 
+    void findShortestPath();
+
     // Destructor
     ~Province() { delete [] _town; }
 
@@ -61,5 +63,6 @@ private:
     };
 
     int _numberOfTowns;
+    int _numberOfRoads;
     Town *_town;
 };
