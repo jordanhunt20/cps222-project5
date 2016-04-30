@@ -27,10 +27,8 @@ Province::Province(std::istream & source)
 
     // Read town names
     for (int i = 0; i < _numberOfTowns; i++) {
-        std::string name;
-        source >> name;
-        _town[i]._name = name;
-        nameMap[name] = i;
+        source >> _town[i]._name;
+        nameMap[_town[i]._name] = i;
     }
 
     // Read roads
