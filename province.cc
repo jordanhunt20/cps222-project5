@@ -6,6 +6,7 @@
 
 #include "province.h"
 #include <algorithm>
+#include <stack>
 
 /*
  * Constructor
@@ -161,7 +162,7 @@ void Province::printShortest(std::ostream & output) const
     // queue to keep track of which vertex to visit next
     std::list <int> toVisit;
 
-    // keeps track of the distance from the capitol to each town
+    // keeps track of the distance from the capital to each town
     // following the shortest path
     double dist[_numberOfTowns];
 
@@ -172,7 +173,7 @@ void Province::printShortest(std::ostream & output) const
         toVisit.push_back(i);
     }
 
-    // distance from the capitol to the capitol is zero
+    // distance from the capital to the capital is zero
     dist[0] = 0.0;
 
     while (!toVisit.empty()) {
@@ -192,21 +193,25 @@ void Province::printShortest(std::ostream & output) const
         }
     }
 
-
+    // print out the data for each non capital town
     for (int i = 1; i < _numberOfTowns; i++) {
         output << "      " << "The shortest route from " + _town[0]._name;
         output << " to " + _town[i]._name + " is " << dist[i];
         output << " mi:" << std::endl;
 
-        std::vector <int> predecessors;
+        // vector to hold the path to the town at index i
+        std::stack <int> predecessors;
+
+        //
         int predecessor = i;
-        predecessors.push_back(i);
+        predecessors.push(i);
         while (predecessor != 0) {
             predecessor = prev[predecessor];
-            predecessors.push_back(predecessor);
+            predecessors.push(predecessor);
         }
-        for (int i = 0; i < predecessors.size(); i++) {
-            output << "            " << _town[predecessors[i]]._name << std::endl;
+        while (!predecessors.empty()) {
+            output << "            " << _town[predecessors.top()]._name << std::endl;
+            predecessors.pop();
         }
     }
 
