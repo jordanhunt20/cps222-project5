@@ -71,14 +71,12 @@ void Province::printAll(int start, std::ostream &output) const {
 
     // Keep track of whether a vertex has been scheduled to be visited, lest
     // we get into a loop
-    output << std::endl << std::endl;
-
-    // keeps track of which vertices have been visited
     bool scheduled[_numberOfTowns];
     for (int i = 0; i < _numberOfTowns; i++) {
         scheduled[i] = false;  // default false value for each vertex
     }
 
+    // keeps track of which vertices have been visited
     // queue to keep track of which vertex to visit next
     std::queue <int> toVisit;
     toVisit.push(start);
@@ -148,9 +146,6 @@ int Province::smallest(double dist[], std::list <int> toVisit,
 * @param output stream to write to
 */
 void Province::printShortest(std::ostream & output) const {
-    output << "------------------------------------------------" << std::endl;
-    output << "------------------------------------------------" << std::endl;
-
     output << "The shortest routes from " + _towns[0]._name;
     output << " are:" << std::endl << std::endl;
 
@@ -365,6 +360,67 @@ void Province::removeBridges(std::ostream & output) const {
         for (int i = 0; i < bfsResult.size(); i++) {
             output << "            ";
             output << _towns[bfsResult[i]]._name << std::endl;
+        }
+    }
+}
+
+/*******************************************************************************
+* DFS on an adjacency matrix
+******************************************************************************/
+// The most straight-forward implementation uses a recursive auxiliary
+void Province::dfs(std::vector<int> & dfsTowns) const // RECURSIVE VERSION
+{
+    // Keep track of whether a vertex has been visited, lest we get into a loop
+    bool visited [ _numberOfTowns ];
+    for (int i = 0; i < _numberOfTowns; i ++)
+        visited[i] = false;
+    dfsAux(0, dfsTowns, visited);
+}
+void Province::dfsAux(int current, std::vector<int> & dfsTowns, bool visited []) const
+{
+    visited[current] = true;
+    dfsTowns.push_back(current);
+    // Do a DFS recursively from each of its neighbors
+    for (Town::RoadList::iterator neighbor =
+            _towns[current]._roads.begin();
+            neighbor != _towns[current]._roads.end();
+            neighbor ++) {
+        if (! visited[neighbor->_head])
+        {
+            dfsAux(neighbor->_head, dfsTowns, visited);
+        }
+    }
+}
+
+void Province::articulationPoints(std::ostream & output) const {
+    std::vector<int> dfsTowns;
+    int numV [_numberOfTowns];
+    std::vector<Road> roadsUsed;
+    std::vector<Road> backRoads;
+    std::list<Road> allRoads;
+    for (int i = 0; i < _numberOfRoads; i++) {
+        allRoads.push_back(_roads[i]);
+    }
+    
+    dfs(dfsTowns);
+    for (int i = 0; i < dfsTowns.size(); i++) {
+        numV[dfsTowns[i]] = i;
+    }
+
+    for (int i = 0; i < dfsTowns.size() - 1; i++) {
+        for (std::list<Road>::iterator neighbor =
+                allRoads.begin();
+                neighbor != allRoads.end();
+                neighbor ++) {
+            if (neighbor->_head == dfsTowns[i]) {
+                if (neighbor->_tail == dfsTowns[i + 1]) {
+
+                }
+            } else if (neighbor->_tail == dfsTowns[i]) {
+                if (neighbor->_head == dfsTowns[i + 1]) {
+
+                }
+            }
         }
     }
 }

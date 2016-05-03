@@ -43,6 +43,10 @@ public:
 
     void removeBridges(std::ostream & output) const;
 
+    void articulationPoints(std::ostream & output) const;
+
+    void dfs(std::vector<int> & dfsTowns) const;
+
     /**
      * Destructor
      */
@@ -52,6 +56,7 @@ private:
 
     int smallest(double dist [], std::list <int> toVisit, int numTowns) const;
     std::vector<int> bfs(int start) const;
+    void dfsAux(int current, std::vector<int> & dfsTowns, bool visited []) const;
 
 
 
