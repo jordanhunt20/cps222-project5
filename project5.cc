@@ -45,5 +45,7 @@ int main(int argc, char *argv[]) {
         theProvince.printShortest(std::cout);
 
         theProvince.minSpan(std::cout);
+
+        theProvince.removeBridges(std::cout);
     }
 }

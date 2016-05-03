@@ -306,3 +306,69 @@ void Province::minSpan(std::ostream & output) const {
     }
 
 }
+
+/*******************************************************************************
+* BFS on an adjacency list
+******************************************************************************/
+std::vector<int> Province::bfs(int start) const {
+    // Keep track of whether a vertex has been scheduled to be visited, lest
+    // we get into a loop
+
+    bool scheduled [ _numberOfTowns ];
+    for (int i = 0; i < _numberOfTowns; i ++)
+    scheduled[i] = false;
+
+    std::queue<int> toVisit;
+    toVisit.push(start);
+    scheduled[start] = true;
+    std::vector<int> results;
+
+    while (! toVisit.empty()) {
+        // Visit front vertex on the queue
+
+        int current = toVisit.front(); toVisit.pop();
+        results.push_back(current);
+
+        // Enqueue its unscheduled neighbors
+
+        for (Town::RoadList::iterator neighbor =
+          _towns[current]._roads.begin();
+          neighbor != _towns[current]._roads.end();
+          neighbor ++) {
+            if (!neighbor->_isBridge) {
+                int head = neighbor -> _head;
+                if (! scheduled[head]) {
+                    toVisit.push(head);
+                    scheduled[head] = true;
+                }
+            }
+        }
+    }
+
+    return results;
+}
+
+void Province::removeBridges(std::ostream & output) const {
+    // queue to keep track of which vertex to visit next
+    std::list<int> toVisit;
+
+    // set defaults for dist, prev, and add all vertices to toVisit
+    for (int i = 0; i < _numberOfTowns; i++) {
+        toVisit.push_back(i);
+    }
+
+    while (!toVisit.empty()) {
+        int curr = toVisit.back();
+        toVisit.pop_back();
+        std::vector<int> bfsResult = bfs(curr);
+        for (int i = 0; i < bfsResult.size(); i++) {
+            //output << "bfsResult.size: " << bfsResult.size() << std::endl;
+            toVisit.remove(bfsResult[i]);
+        }
+        output << "Component: " << std::endl;
+        for (int i = 0; i < bfsResult.size(); i++) {
+
+            output << _towns[bfsResult[i]]._name << std::endl;
+        }
+    }
+}

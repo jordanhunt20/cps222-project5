@@ -41,6 +41,8 @@ public:
 
     void minSpan(std::ostream & output) const;
 
+    void removeBridges(std::ostream & output) const;
+
     /**
      * Destructor
      */
@@ -49,6 +51,7 @@ public:
 private:
 
     int smallest(double dist [], std::list <int> toVisit, int numTowns) const;
+    std::vector<int> bfs(int start) const;
 
 
 
