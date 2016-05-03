@@ -43,6 +43,8 @@ int main(int argc, char *argv[])
         // call the breadth first search function on the new graph
         // to print out ('echo') all of the corresponding data
         // as specified in the project description
-        theProvince.bfs(0, std::cout);
+        theProvince.printAll(0, std::cout);
+
+        theProvince.printShortest(std::cout);
     }
 }

@@ -5,6 +5,7 @@
  */
 
 #include "province.h"
+#include <algorithm>
 
 /*
  * Constructor
@@ -42,7 +43,7 @@ Province::Province(std::istream & source)
         char type;
         source >> type;
         bool isBridge = (type == 'B');
-        
+
         // Get length of road
         double length;
         source >> length;
@@ -59,13 +60,13 @@ Province::Province(std::istream & source)
  * @param start Index to start traversal at
  * @param output Output stream to write to
  */
-void Province::bfs(int start, std::ostream &output) const
+void Province::printAll(int start, std::ostream &output) const
 {
 
     output << "------------------------------------------------" << std::endl;
     output << "---------------- New DataSet: ------------------" << std::endl;
     output << "------------------------------------------------" << std::endl;
-    
+
     // Keep track of whether a vertex has been scheduled to be visited, lest
     // we get into a loop
     output << std::endl << std::endl;
@@ -121,6 +122,99 @@ void Province::bfs(int start, std::ostream &output) const
     output << std::endl << std::endl;
 }
 
+int Province::smallest(double dist [], std::list <int> toVisit, int numTowns) const
+{
+    int smallest = toVisit.front();
+
+    if (toVisit.size() > 1) {
+        for (int i = 0; i < numTowns; i++) {
+            if (dist[i] < dist[smallest] ) {
+                bool found = (std::find(toVisit.begin(), toVisit.end(), i) != toVisit.end());
+                if (found) {
+                    smallest = i;
+                }
+            }
+        }
+    }
+    return smallest;
+}
+
+/**
+ * Print the shortest route from the capital of the
+ * province to each of the other towns
+ * algorithm found at graphs lecture notes under
+ * "Single-Source" All Destinations Shortest Path
+ * @param output stream to write to
+ */
+void Province::printShortest(std::ostream & output) const
+{
+    output << "------------------------------------------------" << std::endl;
+    output << "------------------------------------------------" << std::endl;
+
+    output << "The shortest routes from " + _town[0]._name;
+    output << " are:" << std::endl << std::endl;
+
+    // keeps track of the index of the predecessor to each
+    // vertex n on the shortest path to n
+    int prev[_numberOfTowns];
+
+    // queue to keep track of which vertex to visit next
+    std::list <int> toVisit;
+
+    // keeps track of the distance from the capitol to each town
+    // following the shortest path
+    double dist[_numberOfTowns];
+
+
+    // set defaults for dist, prev, and add all vertices to toVisit
+    for (int i = 0; i < _numberOfTowns; i++) {
+        dist[i] = 100000000.0;
+        toVisit.push_back(i);
+    }
+
+    // distance from the capitol to the capitol is zero
+    dist[0] = 0.0;
+
+    while (!toVisit.empty()) {
+        int smallestIndex = smallest(dist, toVisit, _numberOfTowns);
+
+        toVisit.remove(smallestIndex);
+
+        // Enqueue current vertex's neighbors
+        for (Town::RoadList::iterator neighbor = _town[smallestIndex]._roads.begin();
+        neighbor != _town[smallestIndex]._roads.end(); neighbor++) {
+            double alt = dist[smallestIndex] + neighbor->_length;
+            if (alt < dist[neighbor->_head]) {
+                dist[neighbor->_head] = alt;
+                prev[neighbor->_head] = smallestIndex;
+            }
+
+        }
+    }
+
+
+    for (int i = 1; i < _numberOfTowns; i++) {
+        output << "      " << "The shortest route from " + _town[0]._name;
+        output << " to " + _town[i]._name + " is " << dist[i];
+        output << " mi:" << std::endl;
+
+        std::vector <int> predecessors;
+        int predecessor = i;
+        predecessors.push_back(i);
+        while (predecessor != 0) {
+            predecessor = prev[predecessor];
+            predecessors.push_back(predecessor);
+        }
+        for (int i = 0; i < predecessors.size(); i++) {
+            output << "            " << _town[predecessors[i]]._name << std::endl;
+        }
+    }
+
+    output << "------------------------------------------------" << std::endl;
+    output << "------------------------------------------------" << std::endl;
+}
+
+
 /**
  * Print towns and roads in province in topological sort order
  * @param output Stream to print data to
@@ -147,7 +241,7 @@ void Province::topsort(std::ostream & output) const
             unvisitedPredecessors[iter->_head]++;
         }
     }
-    
+
     // Use a queue of visitable vertices - ones that have no unvisited
     // predecessors. Initially, this queue contains all vertices that
     // have not predecessors in the initial graph

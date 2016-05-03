@@ -29,7 +29,9 @@ public:
      * @param start Index to start traversal at
      * @param output Stream to print data to
      */
-    void bfs(int start, std::ostream & output) const;
+    void printAll(int start, std::ostream & output) const;
+
+    void printShortest(std::ostream & output) const;
 
     /**
      * Print towns and roads in province in topological sort order
@@ -48,6 +50,8 @@ public:
     ~Province() { delete [] _town; }
 
 private:
+
+    int smallest(double dist [], std::list <int> toVisit, int numTowns) const;
 
     /**
      * Road
