@@ -68,11 +68,12 @@ private:
          * @param isBridge Whether or not the road is a bridge
          * @param length Length of the road in miles
          */
-        Road(int head, bool isBridge, double length)
-            : _head(head), _isBridge(isBridge), _length(length)
+        Road(int head, int tail, bool isBridge, double length)
+            : _head(head), _tail(tail), _isBridge(isBridge), _length(length)
         {}
 
         int _head; // Index of originating town in vertex array
+        int _tail;
         bool _isBridge;
         double _length;
     };
@@ -92,4 +93,5 @@ private:
     int _numberOfTowns;
     int _numberOfRoads;
     Town *_town;
+    Road *_road;
 };

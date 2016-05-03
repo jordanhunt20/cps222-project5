@@ -25,6 +25,8 @@ Province::Province(std::istream & source)
     source >> _numberOfTowns >> _numberOfRoads;
 
     _town = new Town[_numberOfTowns];
+    _road = new Road[_numberOfRoads];
+
     std::map <std::string, int> nameMap;
 
     // Read town names
@@ -49,9 +51,12 @@ Province::Province(std::istream & source)
         double length;
         source >> length;
 
+        // Add road to road list
+        _road[i] = Road(headIndex, tailIndex, isBridge, length);
+
         // Add road to both towns it connects
-        _town[tailIndex]._roads.push_back(Road(headIndex, isBridge, length));
-        _town[headIndex]._roads.push_back(Road(tailIndex, isBridge, length));
+        _town[tailIndex]._roads.push_back(Road(headIndex, tailIndex, isBridge, length));
+        _town[headIndex]._roads.push_back(Road(tailIndex, headIndex, isBridge, length));
     }
 }
 
@@ -184,7 +189,7 @@ void Province::printShortest(std::ostream & output) const
         // Enqueue current vertex's neighbors
         for (Town::RoadList::iterator neighbor = _town[smallestIndex]._roads.begin();
         neighbor != _town[smallestIndex]._roads.end(); neighbor++) {
-            
+
             // new distance needed for testing
             double newDist = dist[smallestIndex] + neighbor->_length;
 
@@ -227,6 +232,21 @@ void Province::printShortest(std::ostream & output) const
 
     output << "------------------------------------------------" << std::endl;
     output << "------------------------------------------------" << std::endl;
+}
+
+void Province::minSpan(std::ostream & output) const
+{
+    // initialize a compnum value for each town to 0
+    int compnum[_numberOfTowns];
+    for (int i = 0; i < _numberOfTowns; i++) {
+        compnum[i] = 0;
+    }
+
+    std::list<Road> roads;
+
+    for (int i = 0; i < _numberOfRoads; i++) {
+        roads.push_back(_road[i]);
+    }
 }
 
 
