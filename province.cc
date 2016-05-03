@@ -266,19 +266,19 @@ void Province::minSpan(std::ostream & output) const {
         roads.pop_front();
         if (numComponent[minRoad._head] == 0 &&
           numComponent[minRoad._tail] == 0) {
-            roads.push_back(minRoad);
+            minSpanTree.push_back(minRoad);
             compNum++;
             numComponent[minRoad._head] = compNum;
             numComponent[minRoad._tail] = compNum;
         } else if (numComponent[minRoad._head] == 0) {
-            roads.push_back(minRoad);
+            minSpanTree.push_back(minRoad);
             numComponent[minRoad._head] = numComponent[minRoad._tail];
         } else if (numComponent[minRoad._tail] == 0) {
-            roads.push_back(minRoad);
+            minSpanTree.push_back(minRoad);
             numComponent[minRoad._tail] = numComponent[minRoad._head];
         } else if (numComponent[minRoad._head] <
           numComponent[minRoad._tail]) {
-            roads.push_back(minRoad);
+            minSpanTree.push_back(minRoad);
             higher.push_back(minRoad._tail);
 
             // Set all higher road components to value of lower
@@ -287,7 +287,7 @@ void Province::minSpan(std::ostream & output) const {
             }
         } else if (numComponent[minRoad._head] >
           numComponent[minRoad._tail]) {
-            roads.push_back(minRoad);
+            minSpanTree.push_back(minRoad);
             higher.push_back(minRoad._head);
 
             // Set all higher road components to value of lower
@@ -295,7 +295,14 @@ void Province::minSpan(std::ostream & output) const {
                 higher[i] = numComponent[minRoad._tail];
             }
         }
-
-        output << roads.size() << std::endl;
     }
+    output << "The road upgrading goal can be achieved at minimal cost by upgrading:";
+    output << std::endl << std::endl;
+    for (int i = 0; i < minSpanTree.size(); i++) {
+        output << "      ";
+        output << _towns[minSpanTree[i]._head]._name;
+        output << " to ";
+        output << _towns[minSpanTree[i]._tail]._name << std::endl;
+    }
+
 }
