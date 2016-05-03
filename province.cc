@@ -1,26 +1,25 @@
 /*
- * Implentation of Province.h
- * Copyright 2016 Adam Vigneaux and Jordan Hunt
- * Based on algorithms by Dr. Bjork
- */
+* Implentation of Province.h
+* Copyright 2016 Adam Vigneaux and Jordan Hunt
+* Based on algorithms by Dr. Bjork
+*/
 
-#include "province.h"
+#include "./province.h"
 #include <algorithm>
 #include <stack>
 
 /*
- * Constructor
- * @param source File containing province:
- *               1. One line: number of towns (n), number of roads (p)
- *                  as integers
- *               2. n lines: names of towns, all uppercase
- *               3. p lines: roads, defined as names of towns they
- *                  connect, bridge/not bridge, and length in miles
- *                  ex: BEVERLY DANVERS N 2.9 (connects Beverly and
- *                      Danvers, not a bridge, 2.9 miles long)
- */
-Province::Province(std::istream & source)
-{
+* Constructor
+* @param source File containing province:
+*               1. One line: number of towns (n), number of roads (p)
+*                  as integers
+*               2. n lines: names of towns, all uppercase
+*               3. p lines: roads, defined as names of towns they
+*                  connect, bridge/not bridge, and length in miles
+*                  ex: BEVERLY DANVERS N 2.9 (connects Beverly and
+*                      Danvers, not a bridge, 2.9 miles long)
+*/
+Province::Province(std::istream & source) {
     // Read first line of input
     source >> _numberOfTowns >> _numberOfRoads;
 
@@ -39,8 +38,8 @@ Province::Province(std::istream & source)
     for (int i = 0; i < _numberOfRoads; i++) {
         std::string tail, head;
         source >> tail >> head;
-        int tailIndex = nameMap[tail]; // index of the first town
-        int headIndex = nameMap[head]; // index of the second town
+        int tailIndex = nameMap[tail];  // index of the first town
+        int headIndex = nameMap[head];  // index of the second town
 
         // Get type of road (B for bridge, N for normal)
         char type;
@@ -55,20 +54,20 @@ Province::Province(std::istream & source)
         _road[i] = Road(headIndex, tailIndex, isBridge, length);
 
         // Add road to both towns it connects
-        _town[tailIndex]._roads.push_back(Road(headIndex, tailIndex, isBridge, length));
-        _town[headIndex]._roads.push_back(Road(tailIndex, headIndex, isBridge, length));
+        _town[tailIndex]._roads.push_back(Road(headIndex, tailIndex,
+            isBridge, length));
+        _town[headIndex]._roads.push_back(Road(tailIndex, headIndex,
+            isBridge, length));
     }
 }
 
 /*
- * Print list of towns and roads in province in
- * breadth-first search order
- * @param start Index to start traversal at
- * @param output Output stream to write to
- */
-void Province::printAll(int start, std::ostream &output) const
-{
-
+* Print list of towns and roads in province in
+* breadth-first search order
+* @param start Index to start traversal at
+* @param output Output stream to write to
+*/
+void Province::printAll(int start, std::ostream &output) const {
     output << "------------------------------------------------" << std::endl;
     output << "---------------- New DataSet: ------------------" << std::endl;
     output << "------------------------------------------------" << std::endl;
@@ -78,9 +77,9 @@ void Province::printAll(int start, std::ostream &output) const
     output << std::endl << std::endl;
 
     // keeps track of which vertices have been visited
-    bool scheduled [_numberOfTowns];
+    bool scheduled[_numberOfTowns];
     for (int i = 0; i < _numberOfTowns; i++) {
-        scheduled[i] = false; // default false value for each vertex
+        scheduled[i] = false;  // default false value for each vertex
     }
 
     // queue to keep track of which vertex to visit next
@@ -91,7 +90,6 @@ void Province::printAll(int start, std::ostream &output) const
 
     // Visit each town in queue
     while (!toVisit.empty()) {
-
         // Visit front vertex in the queue
         int current = toVisit.front();
         toVisit.pop();
@@ -101,8 +99,7 @@ void Province::printAll(int start, std::ostream &output) const
 
         // Enqueue current vertex's unscheduled neighbors
         for (Town::RoadList::iterator neighbor = _town[current]._roads.begin();
-             neighbor != _town[current]._roads.end(); neighbor++) {
-
+        neighbor != _town[current]._roads.end(); neighbor++) {
             std::string neighborName = _town[neighbor->_head]._name;
 
             output << "            ";
@@ -128,14 +125,15 @@ void Province::printAll(int start, std::ostream &output) const
     output << std::endl << std::endl;
 }
 
-int Province::smallest(double dist [], std::list <int> toVisit, int numTowns) const
-{
+int Province::smallest(double dist[], std::list <int> toVisit,
+    int numTowns) const {
     int smallest = toVisit.front();
 
     if (toVisit.size() > 1) {
         for (int i = 0; i < numTowns; i++) {
-            if (dist[i] < dist[smallest] ) {
-                bool found = (std::find(toVisit.begin(), toVisit.end(), i) != toVisit.end());
+            if (dist[i] < dist[smallest]) {
+                bool found = (std::find(toVisit.begin(), toVisit.end(), i)
+                                != toVisit.end());
                 if (found) {
                     smallest = i;
                 }
@@ -146,14 +144,13 @@ int Province::smallest(double dist [], std::list <int> toVisit, int numTowns) co
 }
 
 /**
- * Print the shortest route from the capital of the
- * province to each of the other towns
- * algorithm found at graphs lecture notes under
- * "Single-Source" All Destinations Shortest Path
- * @param output stream to write to
- */
-void Province::printShortest(std::ostream & output) const
-{
+* Print the shortest route from the capital of the
+* province to each of the other towns
+* algorithm found at graphs lecture notes under
+* "Single-Source" All Destinations Shortest Path
+* @param output stream to write to
+*/
+void Province::printShortest(std::ostream & output) const {
     output << "------------------------------------------------" << std::endl;
     output << "------------------------------------------------" << std::endl;
 
@@ -187,9 +184,9 @@ void Province::printShortest(std::ostream & output) const
         toVisit.remove(smallestIndex);
 
         // Enqueue current vertex's neighbors
-        for (Town::RoadList::iterator neighbor = _town[smallestIndex]._roads.begin();
-        neighbor != _town[smallestIndex]._roads.end(); neighbor++) {
-
+        for (Town::RoadList::iterator neighbor =
+            _town[smallestIndex]._roads.begin();
+            neighbor != _town[smallestIndex]._roads.end(); neighbor++) {
             // new distance needed for testing
             double newDist = dist[smallestIndex] + neighbor->_length;
 
@@ -199,7 +196,6 @@ void Province::printShortest(std::ostream & output) const
                 dist[neighbor->_head] = newDist;
                 prev[neighbor->_head] = smallestIndex;
             }
-
         }
     }
 
@@ -225,7 +221,8 @@ void Province::printShortest(std::ostream & output) const
 
         // print out the names for each entry in the stack
         while (!predecessors.empty()) {
-            output << "            " << _town[predecessors.top()]._name << std::endl;
+            output << "            " << _town[predecessors.top()]._name;
+            output << std::endl;
             predecessors.pop();
         }
     }
@@ -235,7 +232,6 @@ void Province::printShortest(std::ostream & output) const
 }
 
 void Province::minSpan(std::ostream & output) const
-{
     // initialize a compnum value for each town to 0
     int compnum[_numberOfTowns];
     for (int i = 0; i < _numberOfTowns; i++) {
@@ -251,19 +247,18 @@ void Province::minSpan(std::ostream & output) const
 
 
 /**
- * Print towns and roads in province in topological sort order
- * @param output Stream to print data to
- */
-void Province::topsort(std::ostream & output) const
-{
+* Print towns and roads in province in topological sort order
+* @param output Stream to print data to
+*/
+void Province::topsort(std::ostream & output) const {
     // Record two facts for every vertex: whether it has been visited, and
     // the count of predecessors that have not yet been visited. The
     // latter is initialized to zero, then 1 is added for the head of
     // every edge
 
-    bool visited [_numberOfTowns];
-    int unvisitedPredecessors [_numberOfTowns];
-
+    bool visited[_numberOfTowns];
+    int unvisitedPredecessors[_numberOfTowns];
+<<
     for (int i = 0; i < _numberOfTowns; i ++) {
         visited[i] = false;
         unvisitedPredecessors[i] = 0;
@@ -271,8 +266,8 @@ void Province::topsort(std::ostream & output) const
 
     for (int i = 0; i < _numberOfTowns; i++) {
         for (Town::RoadList::iterator iter = _town[i]._roads.begin();
-             iter != _town[i]._roads.end();
-             iter++) {
+        iter != _town[i]._roads.end();
+        iter++) {
             unvisitedPredecessors[iter->_head]++;
         }
     }
