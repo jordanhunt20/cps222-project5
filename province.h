@@ -33,25 +33,24 @@ public:
 
     void printShortest(std::ostream & output) const;
 
-    /**
-     * Print towns and roads in province in topological sort order
-     * @param output Stream to print data to
-     */
-    void topsort(std::ostream & output) const;
 
     /**
      * Find shortest path from one town to another
      */
     void findShortestPath();
 
+    void minSpan(std::ostream & output) const;
+
     /**
      * Destructor
      */
-    ~Province() { delete [] _town; }
+    ~Province() { delete [] _towns; }
 
 private:
 
     int smallest(double dist [], std::list <int> toVisit, int numTowns) const;
+
+
 
     /**
      * Road
@@ -76,6 +75,7 @@ private:
         int _tail;
         bool _isBridge;
         double _length;
+        bool operator < (const Road &road2);
     };
 
     /**
@@ -92,6 +92,6 @@ private:
 
     int _numberOfTowns;
     int _numberOfRoads;
-    Town *_town;
-    Road *_road;
+    Town *_towns;
+    std::vector<Road> _roads;
 };
