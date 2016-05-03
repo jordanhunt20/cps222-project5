@@ -184,9 +184,14 @@ void Province::printShortest(std::ostream & output) const
         // Enqueue current vertex's neighbors
         for (Town::RoadList::iterator neighbor = _town[smallestIndex]._roads.begin();
         neighbor != _town[smallestIndex]._roads.end(); neighbor++) {
-            double alt = dist[smallestIndex] + neighbor->_length;
-            if (alt < dist[neighbor->_head]) {
-                dist[neighbor->_head] = alt;
+            
+            // new distance needed for testing
+            double newDist = dist[smallestIndex] + neighbor->_length;
+
+            // if new dist is smaller, replace the old one, and
+            // update the corresponding entry in prev
+            if (newDist < dist[neighbor->_head]) {
+                dist[neighbor->_head] = newDist;
                 prev[neighbor->_head] = smallestIndex;
             }
 
@@ -199,16 +204,21 @@ void Province::printShortest(std::ostream & output) const
         output << " to " + _town[i]._name + " is " << dist[i];
         output << " mi:" << std::endl;
 
-        // vector to hold the path to the town at index i
+        // stack to hold the path to the town at index i
         std::stack <int> predecessors;
 
-        //
+        // add town at i to stack
         int predecessor = i;
         predecessors.push(i);
+
+        // follow the links in prev until we get to the capital,
+        // adding each town to the predecessor stack
         while (predecessor != 0) {
             predecessor = prev[predecessor];
             predecessors.push(predecessor);
         }
+
+        // print out the names for each entry in the stack
         while (!predecessors.empty()) {
             output << "            " << _town[predecessors.top()]._name << std::endl;
             predecessors.pop();
