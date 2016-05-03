@@ -37,15 +37,32 @@ int main(int argc, char *argv[]) {
         // corresponding data per graph
         Province theProvince(std::cin);
 
+        std::cout << "------------------------------------------------" << std::endl;
+        std::cout << "---------------- New DataSet: ------------------" << std::endl;
+        std::cout << "------------------------------------------------" << std::endl;
+
+
         // call the breadth first search function on the new graph
         // to print out ('echo') all of the corresponding data
         // as specified in the project description
         theProvince.printAll(0, std::cout);
 
+        std::cout << "------------------------------------------------" << std::endl;
+        std::cout << "------------------------------------------------" << std::endl;
+
         theProvince.printShortest(std::cout);
+
+        std::cout << "------------------------------------------------" << std::endl;
+        std::cout << "------------------------------------------------" << std::endl;
 
         theProvince.minSpan(std::cout);
 
+        std::cout << "------------------------------------------------" << std::endl;
+        std::cout << "------------------------------------------------" << std::endl;
+
         theProvince.removeBridges(std::cout);
+
+        std::cout << "------------------------------------------------" << std::endl;
+        std::cout << "------------------------------------------------" << std::endl;
     }
 }

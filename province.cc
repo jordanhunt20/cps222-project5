@@ -68,9 +68,6 @@ Province::Province(std::istream & source) {
 * @param output Output stream to write to
 */
 void Province::printAll(int start, std::ostream &output) const {
-    output << "------------------------------------------------" << std::endl;
-    output << "---------------- New DataSet: ------------------" << std::endl;
-    output << "------------------------------------------------" << std::endl;
 
     // Keep track of whether a vertex has been scheduled to be visited, lest
     // we get into a loop
@@ -226,9 +223,6 @@ void Province::printShortest(std::ostream & output) const {
             predecessors.pop();
         }
     }
-
-    output << "------------------------------------------------" << std::endl;
-    output << "------------------------------------------------" << std::endl;
 }
 
 
@@ -356,18 +350,20 @@ void Province::removeBridges(std::ostream & output) const {
     for (int i = 0; i < _numberOfTowns; i++) {
         toVisit.push_back(i);
     }
-
+    output << "Connected components in event of a major storm are: ";
+    output << std::endl << std::endl;
     while (!toVisit.empty()) {
         int curr = toVisit.back();
         toVisit.pop_back();
         std::vector<int> bfsResult = bfs(curr);
         for (int i = 0; i < bfsResult.size(); i++) {
-            //output << "bfsResult.size: " << bfsResult.size() << std::endl;
             toVisit.remove(bfsResult[i]);
         }
-        output << "Component: " << std::endl;
+        output << "      ";
+        output << "If all bridges fail, the following towns would form ";
+        output << "an isolated group:" << std::endl;
         for (int i = 0; i < bfsResult.size(); i++) {
-
+            output << "            ";
             output << _towns[bfsResult[i]]._name << std::endl;
         }
     }
