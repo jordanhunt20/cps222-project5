@@ -391,22 +391,59 @@ void Province::dfsAux(int current, std::vector<int> & dfsTowns, bool visited [])
     }
 }
 
+/**
+ * Get Low V for a vertex, determined by the minimum of the following:
+ * 1. currNumV - vertex number in DFS traversal
+ * 2. lowV - low value of any child in DFS tree
+ * 3. numV - num value of any node reachable by following a back edge
+ * @param vertexNumV Number value in DFS tree of current vertex
+ * @param lowV       List of low values of vertices in DFS tree
+ * @param numV       List of number values of vertices in DFS tree
+ * @return           Low value of current vertex
+ */
+int getLowV(int vertexNumV, int lowV[], int numV[],
+            std::vector<int> dfsTowns) {
+
+    int vertexLowV = vertexNumV;
+
+    // Look for lower value in list of vertex low values
+    for (int i = 0; i < dfsTowns.size(); i++) {
+        int currLowV = lowV[dfsTowns[i]];
+        vertexLowV = std::min(currLowV, vertexLowV);
+    }
+
+    // Look for lower value in nodes reachable by following back edge
+    
+    
+    return vertexLowV;
+}
+
 void Province::articulationPoints(std::ostream & output) const {
     std::vector<int> dfsTowns;
-    int numV [_numberOfTowns];
+    int numV[_numberOfTowns];
+    int lowV[_numberOfTowns];
     std::vector<Road> roadsUsed;
     std::vector<Road> backRoads;
     std::list<Road> allRoads;
     for (int i = 0; i < _numberOfRoads; i++) {
         allRoads.push_back(_roads[i]);
     }
-    
+
+    // Do depth-first traversal
     dfs(dfsTowns);
+
+    // Number vertices in order visited
     for (int i = 0; i < dfsTowns.size(); i++) {
         numV[dfsTowns[i]] = i;
     }
 
-    for (int i = 0; i < dfsTowns.size() - 1; i++) {
+    // Do a reverse depth-first traversal
+    for (int i = dfsTowns.size() - 1; i >= 0; i--) {
+
+        int currLowV = getLowV(numV[dfsTowns[i]], lowV, numV,
+                               dfsTowns);
+        lowV[dfsTowns[i]] = currLowV;
+        
         for (std::list<Road>::iterator neighbor =
                 allRoads.begin();
                 neighbor != allRoads.end();
