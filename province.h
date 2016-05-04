@@ -83,7 +83,8 @@ private:
         int _tail;
         bool _isBridge;
         double _length;
-        bool operator < (const Road &road2);
+
+        bool operator < (Road road2) const;
     };
 
     /**

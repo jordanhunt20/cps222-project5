@@ -223,11 +223,10 @@ void Province::printShortest(std::ostream & output) const {
 
 /**
  * Overloads operator < when used to compare two roads
- * @param road1 A road
  * @param road2 A road
  * Returns true if road1 has a smaller length than road 2
  */
-bool Province::Road::operator < (const Road &road2) {
+bool Province::Road::operator < (Road road2) const {
     return this->_length < road2._length;
 }
 
