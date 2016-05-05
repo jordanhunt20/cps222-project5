@@ -20,13 +20,12 @@
 *                  ex: BEVERLY DANVERS N 2.9 (connects Beverly and
 *                      Danvers, not a bridge, 2.9 miles long)
 */
-Province::Province(std::istream & source) {
+Province::Province(std::istream &source) {
     // Read first line of input
     source >> _numberOfTowns >> _numberOfRoads;
 
-    _towns = new Town[_numberOfTowns];
-
-    std::map <std::string, int> nameMap;
+    _towns = new Town[_numberOfTowns];    
+    std::map<std::string, int> nameMap;
 
     // Read town names
     for (int i = 0; i < _numberOfTowns; i++) {
@@ -62,12 +61,12 @@ Province::Province(std::istream & source) {
     }
 }
 
-/*
-* Print list of towns and roads in province in
-* breadth-first search order
-* @param start Index to start traversal at
-* @param output Output stream to write to
-*/
+/**
+ * Print list of towns and roads in province in
+ * breadth-first search order
+ * @param start Index to start traversal at
+ * @param output Output stream to write to
+ */
 void Province::printAll(int start, std::ostream &output) const {
 
     // Keep track of whether a vertex has been scheduled to be visited, lest
