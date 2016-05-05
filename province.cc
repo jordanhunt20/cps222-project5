@@ -146,6 +146,14 @@ int Province::smallest(double dist[], std::list <int> toVisit,
 * @param output stream to write to
 */
 void Province::printShortest(std::ostream & output) const {
+
+    // Bypass entire function if only one town
+    if (_numberOfTowns == 1) {
+        output << "There is only one town, so the provincial "
+               << "officials have no need of efficient routes!";
+        return;
+    }
+
     output << "The shortest routes from " + _towns[0]._name;
     output << " are:" << std::endl << std::endl;
 
@@ -235,6 +243,14 @@ bool Province::Road::operator < (Road road2) const {
  * @param output Stream to print output to
  */
 void Province::minSpan(std::ostream & output) const {
+
+    // Bypass entire function if only one town
+    if (_numberOfTowns == 1) {
+        output << "There is only one town, so the province "
+               << "does not need to upgrade any roads!";
+        return;
+    }
+    
     std::list<Road> roads;
     std::vector<Road> minSpanTree;
     std::vector<int> higher;
@@ -368,6 +384,29 @@ std::vector<int> Province::bfs(int start) const {
  * @param output Stream to print output to
  */
 void Province::removeBridges(std::ostream &output) const {
+
+    // Look for a bridge
+    bool hasBridge = false;
+    for (int roadNum = 0; roadNum < _roads.size(); roadNum++) {
+        if (_roads[roadNum]._isBridge) {
+            hasBridge = true;
+            break;
+        }
+    }
+    
+    // Bypass entire function if only one town
+    if (_numberOfTowns == 1) {
+        output << "There is only one town, so the province "
+               << "will not be affected by a major storm!";
+        return;
+
+    // Bypass entire function if province has no bridges
+    } else if (!hasBridge) {
+        output << "The province has no bridges, so it "
+               << "will not be affected by a major storm!";
+        return;
+    }
+    
     // Mark all towns as unvisited
     std::list<int> toVisit;
     for (int i = 0; i < _numberOfTowns; i++) {
