@@ -224,48 +224,61 @@ void Province::printShortest(std::ostream & output) const {
 /**
  * Overloads operator < when used to compare two roads
  * @param road2 A road
- * Returns true if road1 has a smaller length than road 2
+ * @return      True if road1 is shorter in length than road 2
  */
 bool Province::Road::operator < (Road road2) const {
     return this->_length < road2._length;
 }
 
+/**
+ * Find minimum spanning tree of the province
+ * @param output Stream to print output to
+ */
 void Province::minSpan(std::ostream & output) const {
-    // initialize a numComponent value for each town to 0
+    std::list<Road> roads;
+    std::vector<Road> minSpanTree;
+    std::vector<int> higher;
+    
+    // Initialize a numComponent value for each town to 0
     int numComponent[_numberOfTowns];
     for (int i = 0; i < _numberOfTowns; i++) {
         numComponent[i] = 0;
     }
-
-    std::list<Road> roads;
-    std::vector<Road> minSpanTree;
-
+    
+    // Add all roads to list of roads
     for (int i = 0; i < _numberOfRoads; i++) {
         roads.push_back(_roads[i]);
     }
 
+    // Sort list of roads by length
     roads.sort();
 
-    std::vector<int> higher;
-
-    int compNum = 0;
+    int compNum = 0;  // Used to determine if edge forms a cycle
     while (minSpanTree.size() < _numberOfTowns - 1) {
         Road minRoad = roads.front();
         roads.pop_front();
+
+        // Both towns have component number 0
         if (numComponent[minRoad._head] == 0 &&
-          numComponent[minRoad._tail] == 0) {
+            numComponent[minRoad._tail] == 0) {
             minSpanTree.push_back(minRoad);
             compNum++;
             numComponent[minRoad._head] = compNum;
             numComponent[minRoad._tail] = compNum;
+
+        // Only one town has component number 0
         } else if (numComponent[minRoad._head] == 0) {
             minSpanTree.push_back(minRoad);
             numComponent[minRoad._head] = numComponent[minRoad._tail];
+
+        // Other town has component number 0
         } else if (numComponent[minRoad._tail] == 0) {
             minSpanTree.push_back(minRoad);
             numComponent[minRoad._tail] = numComponent[minRoad._head];
+
+        // If component number of one town is less than other town
         } else if (numComponent[minRoad._head] <
-          numComponent[minRoad._tail]) {
+                   numComponent[minRoad._tail]) {
             minSpanTree.push_back(minRoad);
             higher.push_back(minRoad._tail);
 
@@ -273,8 +286,10 @@ void Province::minSpan(std::ostream & output) const {
             for (int i = 0; i < higher.size(); i++) {
                 higher[i] = numComponent[minRoad._head];
             }
+
+        // If component number of other town is less than other town
         } else if (numComponent[minRoad._head] >
-          numComponent[minRoad._tail]) {
+                   numComponent[minRoad._tail]) {
             minSpanTree.push_back(minRoad);
             higher.push_back(minRoad._head);
 
@@ -284,51 +299,57 @@ void Province::minSpan(std::ostream & output) const {
             }
         }
     }
+    
     output << "The road upgrading goal can be achieved at minimal cost by upgrading:";
     output << std::endl << std::endl;
+
+    // Print names of towns in minimum spanning tree of province
     for (int i = 0; i < minSpanTree.size(); i++) {
         output << "      ";
         output << _towns[minSpanTree[i]._head]._name;
         output << " to ";
         output << _towns[minSpanTree[i]._tail]._name << std::endl;
     }
-
 }
 
-/*******************************************************************************
-* BFS on an adjacency list
-******************************************************************************/
+/**
+ * Conduct a breadth-first traversal on the province, ignoring bridges
+ * @param start Index of town to start traversal at
+ * @return      List of indices of towns in order of traversal
+ */
 std::vector<int> Province::bfs(int start) const {
-    // Keep track of whether a vertex has been scheduled to be visited, lest
-    // we get into a loop
+    // Initialize list of towns scheduled to visit
+    bool scheduled[_numberOfTowns];
+    for (int i = 0; i < _numberOfTowns; i ++) {
+        scheduled[i] = false;
+    }
 
-    bool scheduled [ _numberOfTowns ];
-    for (int i = 0; i < _numberOfTowns; i ++)
-    scheduled[i] = false;
-
+    // Initialize list of towns to visit with starting town
     std::queue<int> toVisit;
     toVisit.push(start);
+
     scheduled[start] = true;
     std::vector<int> results;
 
-    while (! toVisit.empty()) {
-        // Visit front vertex on the queue
+    // While all towns have not been visited
+    while (!toVisit.empty()) {
 
-        int current = toVisit.front(); toVisit.pop();
+        // Remove current town from queue, add to results
+        int current = toVisit.front();
+        toVisit.pop();
         results.push_back(current);
 
-        // Enqueue its unscheduled neighbors
-
+        // Iterate over neighbors to current town
         for (Town::RoadList::iterator neighbor =
-          _towns[current]._roads.begin();
-          neighbor != _towns[current]._roads.end();
-          neighbor ++) {
-            if (!neighbor->_isBridge) {
-                int head = neighbor -> _head;
-                if (! scheduled[head]) {
-                    toVisit.push(head);
-                    scheduled[head] = true;
-                }
+                 _towns[current]._roads.begin();
+             neighbor != _towns[current]._roads.end();
+             neighbor ++) {
+
+            // If neighbor is not bridge and is not scheduled,
+            // add to results and schedule
+            if (!neighbor->_isBridge && !scheduled[neighbor->_head]) {
+                toVisit.push(neighbor->_head);
+                scheduled[neighbor->_head] = true;
             }
         }
     }
@@ -336,23 +357,37 @@ std::vector<int> Province::bfs(int start) const {
     return results;
 }
 
-void Province::removeBridges(std::ostream & output) const {
-    // queue to keep track of which vertex to visit next
+/**
+ * Remove bridges and print the list of towns that remain connected
+ * 1. Remove all bridges
+ * 2. Make a list of towns to visit
+ * 3. Run a BFS from a town, remove that town and all reached towns
+ *    from list to visit, then print all towns in that connected
+ *    component.
+ * 4. Repeat step 3 for all remaining towns.
+ * @param output Stream to print output to
+ */
+void Province::removeBridges(std::ostream &output) const {
+    // Mark all towns as unvisited
     std::list<int> toVisit;
-
-    // set defaults for dist, prev, and add all vertices to toVisit
     for (int i = 0; i < _numberOfTowns; i++) {
         toVisit.push_back(i);
     }
-    
+
     output << "Connected components in event of a major storm are: ";
     output << std::endl << std::endl;
-    
+
+    // While not all towns have been visited
     while (!toVisit.empty()) {
+
+        // Mark current town as visited
         int curr = toVisit.back();
         toVisit.pop_back();
+
+        // Run BFS from current town
         std::vector<int> bfsResult = bfs(curr);
 
+        // Mark all towns in BFS result as visited
         for (int i = 0; i < bfsResult.size(); i++) {
             toVisit.remove(bfsResult[i]);
         }
@@ -361,6 +396,7 @@ void Province::removeBridges(std::ostream & output) const {
         output << "If all bridges fail, the following towns would form ";
         output << "an isolated group:" << std::endl;
 
+        // Print names of all towns in connected component
         for (int i = 0; i < bfsResult.size(); i++) {
             output << "            ";
             output << _towns[bfsResult[i]]._name << std::endl;
@@ -368,29 +404,35 @@ void Province::removeBridges(std::ostream & output) const {
     }
 }
 
-/*******************************************************************************
-* DFS on an adjacency matrix
-******************************************************************************/
-// The most straight-forward implementation uses a recursive auxiliary
-void Province::dfs(std::vector<int> & dfsTowns) const // RECURSIVE VERSION
-{
-    // Keep track of whether a vertex has been visited, lest we get into a loop
+/**
+ * Perform a depth-first search on province
+ * @param dfsTowns List to populate with results of search
+ */
+void Province::dfs(std::vector<int> &dfsTowns) const {
     bool visited [ _numberOfTowns ];
-    for (int i = 0; i < _numberOfTowns; i ++)
+    for (int i = 0; i < _numberOfTowns; i++) {
         visited[i] = false;
+    }
     dfsAux(0, dfsTowns, visited);
 }
-void Province::dfsAux(int current, std::vector<int> & dfsTowns, bool visited []) const
-{
+
+/**
+ * Auxiliary function for recursive depth-first search
+ * @param current Current index
+ * @param dfsTowns List to populate with results of search
+ * @param visited List of visited town indices
+ */
+void Province::dfsAux(int current, std::vector<int> &dfsTowns,
+                      bool visited[]) const {
     visited[current] = true;
     dfsTowns.push_back(current);
+
     // Do a DFS recursively from each of its neighbors
     for (Town::RoadList::iterator neighbor =
-            _towns[current]._roads.begin();
-            neighbor != _towns[current]._roads.end();
-            neighbor ++) {
-        if (! visited[neighbor->_head])
-        {
+             _towns[current]._roads.begin();
+         neighbor != _towns[current]._roads.end();
+         neighbor ++) {
+        if (!visited[neighbor->_head]) {
             dfsAux(neighbor->_head, dfsTowns, visited);
         }
     }
