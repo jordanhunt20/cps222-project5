@@ -344,18 +344,23 @@ void Province::removeBridges(std::ostream & output) const {
     for (int i = 0; i < _numberOfTowns; i++) {
         toVisit.push_back(i);
     }
+    
     output << "Connected components in event of a major storm are: ";
     output << std::endl << std::endl;
+    
     while (!toVisit.empty()) {
         int curr = toVisit.back();
         toVisit.pop_back();
         std::vector<int> bfsResult = bfs(curr);
+
         for (int i = 0; i < bfsResult.size(); i++) {
             toVisit.remove(bfsResult[i]);
         }
+
         output << "      ";
         output << "If all bridges fail, the following towns would form ";
         output << "an isolated group:" << std::endl;
+
         for (int i = 0; i < bfsResult.size(); i++) {
             output << "            ";
             output << _towns[bfsResult[i]]._name << std::endl;
