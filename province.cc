@@ -7,6 +7,7 @@
 #include "./province.h"
 #include <algorithm>
 #include <stack>
+#include <cfloat>
 
 /*
 * Constructor
@@ -163,7 +164,7 @@ void Province::printShortest(std::ostream & output) const {
 
     // set defaults for dist, prev, and add all vertices to toVisit
     for (int i = 0; i < _numberOfTowns; i++) {
-        dist[i] = 100000000.0;
+        dist[i] = DBL_MAX;
         toVisit.push_back(i);
     }
 
